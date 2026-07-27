@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Web:      www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+defaultFieldValues
+(
+    volScalarFieldValue alpha.a 0.0
+    volScalarFieldValue alpha.b 1.0
+    volScalarFieldValue Theta 1e-8
+    volVectorFieldValue U.a (0 0 0)
+    volVectorFieldValue U.b (0.26 0 0)
+    volScalarFieldValue k.b 2.535e-4
+    volScalarFieldValue omega.b 4.153
+);
+
+regions
+(
+    // Sediment bed region: y from -0.10 m to 0.0 m
+    boxToCell
+    {
+        box (0.0 -0.10 -0.01) (8.0 0.0 0.01);
+        fieldValues
+        (
+            volScalarFieldValue alpha.a 0.60
+            volScalarFieldValue alpha.b 0.40
+            volScalarFieldValue Theta 1e-4
+            volVectorFieldValue U.b (0 0 0)
+            volScalarFieldValue k.b 1e-8
+            volScalarFieldValue omega.b 1e-8
+        );
+    }
+);
+
+// ************************************************************************* //

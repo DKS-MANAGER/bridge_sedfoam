@@ -1,0 +1,31 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+
+# Source OpenFOAM utilities
+. ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions
+
+# Clean case
+./Allclean
+
+echo "Generating mesh using blockMesh..."
+blockMesh > log.blockMesh 2>&1
+
+echo "Copying 0_org to 0..."
+cp -r 0_org 0
+
+echo "Initializing fields with setFields..."
+setFields > log.setFields 2>&1
+
+echo "Writing cell centres..."
+postProcess -func writeCellCentres -time 0 > log.writeCellCentres 2>&1
+ln -s Cx 0/ccx 2>/dev/null || true
+ln -s Cy 0/ccy 2>/dev/null || true
+ln -s Cz 0/ccz 2>/dev/null || true
+
+echo "Decomposing case..."
+decomposePar > log.decomposePar 2>&1
+
+echo "Running sedFoam_rbgh on 4 processors..."
+mpirun -np 4 sedFoam_rbgh -parallel > log.sedFoam_rbgh 2>&1 &
+
+echo "Simulation launched in background."

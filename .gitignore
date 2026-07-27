@@ -1,0 +1,10 @@
+# OpenFOAM gitignore
+[0-9]*/
+!0_org/
+postProcessing/
+processor*/
+dynamicCode/
+log.*
+*.foam
+*.xy
+log.test
