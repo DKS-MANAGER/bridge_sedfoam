@@ -33,7 +33,9 @@ Bphi            Bphi [ 0 0 0 0 0 0 0 ] 0.66;
 
 n               n [ 0 0 0 0 0 0 0 ] 2.5;
 
-relaxPa         relaxPa [ 0 0 0 0 0 0 0 ] 0.001;
+Dsmall          Dsmall [ 0 0 -1 0 0 0 0 ] 1e-4;
+
+relaxPa         relaxPa [ 0 0 0 0 0 0 0 ] 5e-5;
 
 FrictionModel  MuI;
 
