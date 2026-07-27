@@ -80,3 +80,17 @@ Use the following command to track solver convergence and physical time-step sca
 ```bash
 tail -f log.sedFoam_rbgh
 ```
+
+---
+
+## 5. Morphological Time Scale & Equilibrium Scour
+
+### 5.1 Initial Scour Rate vs. Long-Term Equilibrium
+In resolved two-phase CFD scour simulations using `sedFoam_rbgh`, the erodible sediment bed undergoes a highly dynamic transition:
+- **Phase I (Rapid Scour)**: During the first $5$ to $10\text{ s}$ of physical time, the high shear stress peak under the bridge contraction causes rapid sediment mobilization. The bed profiles change rapidly.
+- **Phase II (Asymptotic Approach to Equilibrium)**: Between $10\text{ s}$ and $20\text{ s}$, the enlargement of the flow passage reduces the local velocity and bed shear stress. The scouring rate slows down exponentially as it approaches morphological equilibrium.
+
+### 5.2 Simulation Duration Settings
+- **`endTime` (20 seconds)**: Captures $80\text{--}90\%$ of the active scour evolution while maintaining a feasible computational runtime ($\approx 5$ hours of wall-clock time on 8 processors).
+- **`writeInterval` (0.5 seconds)**: Provides 40 temporal snapshots, allowing high-resolution visualization and animation of the transient scour hole development.
+
