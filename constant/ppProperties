@@ -18,15 +18,15 @@ FoamFile
 
 ppModel          JohnsonJackson;
 
-alphaMax         alphaMax [ 0 0 0 0 0 0 0 ] 0.66;
+alphaMax         alphaMax [ 0 0 0 0 0 0 0 ] 0.635;
 
 alphaMinFriction alphaMinFriction [ 0 0 0 0 0 0 0 ] 0.57;
 
-Fr               Fr [ 1 -1 -2 0 0 0 0 ] 5e-2;
+Fr               Fr [ 1 -1 -2 0 0 0 0 ] 0.5;
 
 eta0             eta0 [ 0 0 0 0 0 0 0 ] 3;
 
-eta1             eta1 [ 0 0 0 0 0 0 0 ] 5;
+eta1             eta1 [ 0 0 0 0 0 0 0 ] 3;
 
 
 packingLimiter  yes;

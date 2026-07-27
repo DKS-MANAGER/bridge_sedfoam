@@ -21,7 +21,7 @@ granularDilatancy  off;
 
 granularCohesion  off;
 
-alphaMaxG       alphaMaxG [ 0 0 0 0 0 0 0 ] 0.65;
+alphaMaxG       alphaMaxG [ 0 0 0 0 0 0 0 ] 0.635;
 
 mus             mus  [ 0 0 0 0 0 0 0 ] 0.4;
 
