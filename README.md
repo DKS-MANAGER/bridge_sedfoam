@@ -1,12 +1,34 @@
-# Computational Fluid Dynamics (CFD) Report: Erodible-Bed Pressure Flow Scour due to Vertical Bridge Contraction
+# CFD Report: Erodible-Bed Contraction Scour using SedFoam
 
 This repository contains the OpenFOAM (v2412) implementation, grid setup, and parallel run configurations designed to model vertical bridge contraction scour over an erodible sediment bed. By utilizing the high-fidelity two-phase solver **`sedFoam_rbgh`**, this model transitions from simplified rigid-bed wall functions to a fully resolved sediment transport, erodible bed deformation, and morphological scour evolution.
 
 ---
 
-## 1. Governing Physical Theory
+## 1. Executive Summary: What, How, and Why
 
-### 1.1 Two-Phase Saturated Hydrodynamic Solver
+### 1.1 What was done?
+*   **Mobile Bed Adaptation**: Adapted the rigid-bed experimental setup from Majid et al. (2026) to a fully erodible sediment bed with median grain size $d_{50} = 0.68\text{ mm}$ and sediment density $\rho_s = 2650\text{ kg/m}^3$.
+*   **Slope Integration**: Integrated the experimental channel slope ($S_0 = 0.018\%$) directly into the simulation as a streamwise gravity component ($g_x = 0.0017658\text{ m/s}^2$).
+*   **Solver Diagnostics & Stabilization**: Resolved a numerical crash (floating-point exception `SIGFPE`) at physical time $t = 0.202\text{ s}$ by patching the granular pressure model, volume fraction tolerances, and PIMPLE correctors.
+
+### 1.2 How was it resolved? (Applied Fixes)
+*   **Particulate Pressure Correction**: Corrected `PPressureModel` from `none` to **`MuI`** and set `relaxPa` to **`0.001`** in [constant/granularRheologyProperties](file:///e:/DKS/bridge_sedfoam/constant/granularRheologyProperties) to enable the µ(I) frictional pressure formulation.
+*   **Tightened Volume Fraction Tolerance**: Decreased the solver tolerance for the dispersed sediment phase volume fraction (`alpha.a` and `alpha.aFinal`) from $10^{-8}$ to **`1e-12`** in [system/fvSolution](file:///e:/DKS/bridge_sedfoam/system/fvSolution).
+*   **Increased Pressure-Velocity Correctors**: Raised the number of PIMPLE correctors (`nCorrectors`) from 2 to **`3`** in [system/fvSolution](file:///e:/DKS/bridge_sedfoam/system/fvSolution).
+*   **Updated Gravity Vector**: Patched [g](file:///e:/DKS/bridge_sedfoam/constant/g) to specify the incline: `value ( 0.0017658 -9.81 0 );`.
+
+### 1.3 Why did it crash? (The Physical Mechanism)
+In the original case configuration, the particulate pressure model (`PPressureModel`) was disabled (`none`). Consequently:
+*   The solver lacked the necessary granular stress term to physically resist sediment packing beyond the critical limit ($\alpha_{max} = 0.635$).
+*   Without this resistance, loose volume fraction tolerances ($10^{-8}$) allowed localized wiggles in `alpha.a` at the interface to build up, calculating artificial contact pressure spikes ($p_{ff} > 135\text{ kPa}$).
+*   These spikes forced extreme, unphysical velocity gradients ($U_a > 7\text{ m/s}$) that triggered a floating-point exception (`SIGFPE`) in the drag/turbulence solvers.
+*   **Result of Fix**: Enabling `PPressureModel MuI` and tightening tolerances keeps the interface smooth and bounded. At $t \approx 0.036\text{ s}$, the contact pressure remains exceptionally stable ($p_{ff} \approx 1.6\text{ kPa}$ compared to $7.8\text{ kPa}$ previously) and velocity fields are fully bounded ($U_a, U_b \approx 0.3\text{ m/s}$).
+
+---
+
+## 2. Governing Physical Theory
+
+### 2.1 Two-Phase Saturated Hydrodynamic Solver
 The flow solver operates on the two-phase Eulerian-Eulerian formulation where the fluid phase ($b$) and sediment/granular phase ($a$) satisfy:
 $$\alpha_a + \alpha_b = 1.0$$
 
@@ -15,17 +37,17 @@ $$\frac{\partial (\alpha_i \rho_i \mathbf{U}_i)}{\partial t} + \nabla \cdot (\al
 
 *Where $\mathbf{M}_{ji}$ represents the momentum transfer (drag and lift forces) between the fluid and sediment phases.*
 
-### 1.2 Granular Stress & Rheology Model
+### 2.2 Granular Stress & Rheology Model
 Particle-particle interactions and erodible bed stability are modeled using the **$\mu(I)$ rheology framework** (Boyer et al. formulation):
-- **Particulate Pressure ($p_a$)**: Prevents the sediment phase volume fraction from exceeding the packing limit ($\alpha_{\text{max}} = 0.635$).
+- **Particulate Pressure ($p_a$)**: Prevents the sediment phase volume fraction from exceeding the packing limit ($\alpha_{\text{max}} = 0.635$) using the `MuI` model.
 - **Friction Coefficient ($\mu(I)$)**: Governs transition from quasi-static to inertial flow regimes based on the inertial number $I$.
 - **Dilatancy Angle ($\delta$)**: Dimensionless parameter representing vertical expansion/contraction under shear deformation, resolved dynamically by the granular rheology solver.
 
 ---
 
-## 2. Computational Mesh & Case Setup
+## 3. Computational Mesh & Case Setup
 
-### 2.1 Spatial Discretization & Mesh Optimizations
+### 3.1 Spatial Discretization & Mesh Optimizations
 A structured multi-block hexahedral grid was developed to resolve boundary layers and high-gradient zones (bed boundary layer, contraction entrance, and ceiling boundary layers):
 - **Domain Dimensions**: $8.0\text{ m}$ (Length) $\times$ $0.20\text{ m}$ (Height) $\times$ $0.01\text{ m}$ (Width, 2D slice).
 - **Sediment Bed**: Extends from $y = -0.10\text{ m}$ to $y = 0.0\text{ m}$ ($10\text{ cm}$ erodible depth).
@@ -36,7 +58,7 @@ A structured multi-block hexahedral grid was developed to resolve boundary layer
   - **Sediment-Water Interface ($y = 0.0\text{ m}$)**: Cell size refined down to $y_{\text{first}} \approx 0.22\text{ mm}$, yielding a dimensionless wall distance of $y^+ \approx 1.4$, placing the first cell well inside the viscous sublayer ($y^+ < 5$).
   - **Bridge Ceiling ($y = 0.075\text{ m}$)**: Refined using grading to capture wall-bounded shear layers.
 
-### 2.2 Boundary Conditions (BCs)
+### 3.2 Boundary Conditions (BCs)
 
 | Field | description | Inlet | Bed (Bottom Wall) | Top Lid | Bridge Ceiling |
 |:---|:---|:---|:---|:---|:---|
@@ -51,7 +73,7 @@ A structured multi-block hexahedral grid was developed to resolve boundary layer
 
 ---
 
-## 3. Geometry & Domain Schematic
+## 4. Geometry & Domain Schematic
 
 Below is the side-view schematic (X-Y plane) of the simulation domain showing the erodible sediment bed, the water column, and the bridge constriction zone:
 
@@ -59,38 +81,36 @@ Below is the side-view schematic (X-Y plane) of the simulation domain showing th
 
 ---
 
-## 4. Execution & High-Performance Computing (HPC)
+## 5. Execution & Simulation Progress
 
-The simulation uses parallel decomposition to optimize runtime. Given the mesh size (~110,000 cells), the domain is divided into **8 subdomains** (~13,800 cells per core) to maintain peak parallel scaling efficiency and minimize MPI communication overhead.
-
-### 4.1 Running the Case
-The execution script clean-builds the mesh, initializes fields, partitions the domain, and starts the solver:
+### 5.1 Clean and Run Command
+To build/re-build the case and launch it:
 ```bash
+source /usr/lib/openfoam/openfoam2412/etc/bashrc
 ./Allrun
 ```
 
-### 4.2 Resetting Case Files
+### 5.2 Reset Case Files
 To delete all generated mesh, processor subdirectories, logs, and time-step fields:
 ```bash
 ./Allclean
 ```
 
-### 4.3 Monitoring Simulation Progress
+### 5.3 Observations & Monitoring
 Use the following command to track solver convergence and physical time-step scaling:
 ```bash
 tail -f log.sedFoam_rbgh
 ```
 
+**Key Morphological Phases**:
+- **Phase I (Rapid Scour)**: The high shear stress peak under the bridge contraction entrance drives rapid sediment displacement. The bed profile deforms quickly.
+- **Phase II (Asymptotic Approach)**: The scour hole enlarges, expanding the flow throat area, which decreases local velocities and shear stresses. The erosion rate decreases exponentially toward a morphological equilibrium state.
+
 ---
 
-## 5. Morphological Time Scale & Equilibrium Scour
-
-### 5.1 Initial Scour Rate vs. Long-Term Equilibrium
-In resolved two-phase CFD scour simulations using `sedFoam_rbgh`, the erodible sediment bed undergoes a highly dynamic transition:
-- **Phase I (Rapid Scour)**: During the first $5$ to $10\text{ s}$ of physical time, the high shear stress peak under the bridge contraction causes rapid sediment mobilization. The bed profiles change rapidly.
-- **Phase II (Asymptotic Approach to Equilibrium)**: Between $10\text{ s}$ and $20\text{ s}$, the enlargement of the flow passage reduces the local velocity and bed shear stress. The scouring rate slows down exponentially as it approaches morphological equilibrium.
-
-### 5.2 Simulation Duration Settings
-- **`endTime` (20 seconds)**: Captures $80\text{--}90\%$ of the active scour evolution while maintaining a feasible computational runtime ($\approx 5$ hours of wall-clock time on 8 processors).
-- **`writeInterval` (0.5 seconds)**: Provides 40 temporal snapshots, allowing high-resolution visualization and animation of the transient scour hole development.
-
+## Acknowledgments
+The baseline physical and channel setup parameters were calibrated based on the experimental flume configurations reported in:
+> **Effect of Bed Roughness on Pressure Flow due to Vertical Contraction**  
+> *Sofi Aamir Majid, S.M.ASCE; Shivam Tripathi; and Debopam Das*  
+> **Journal of Hydraulic Engineering, ASCE (Volume 152, Issue 3, January 2026)**  
+> DOI: [10.1061/JHEND8.HYENG-14490](https://doi.org/10.1061/JHEND8.HYENG-14490)

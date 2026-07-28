@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
-| \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \    /   O peration     | Version:  v2412                                 |
-|   \  /    A nd           | Web:      www.openfoam.com                      |
-|    \/     M anipulation  |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Web:      www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -24,7 +24,7 @@ boundaryField
     {
         type            codedFixedValue;
         value           uniform 1.0;
-        name            inletProfileAlphaB;
+        name            inletProfileAlphab;
         code
         #{
             const fvPatch& boundaryPatch = patch();
