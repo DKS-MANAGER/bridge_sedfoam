@@ -92,25 +92,29 @@ bridge_sedfoam/
 
 ## 4. Solver Fixes & Rigid-to-Mobile Bed Adaptation Log
 
-Converting the flume geometry from a rigid bed to a dynamic, erodible two-phase boundary layer required significant solver configuration changes. During testing, a numerical blow-up occurred at $t = 0.3696\text{ s}$ due to `SIGFPE` (Floating Point Exception). 
+Converting the flume geometry from a rigid bed to a dynamic, erodible two-phase boundary layer required significant solver configuration changes. During testing, a numerical blow-up occurred due to `SIGFPE` (Floating Point Exception) and timestep collapses. 
 
 The following key modifications were made to ensure numerical stability and correct physics:
 
-### 4.1 Granular Frictional Pressure Model Activation
-*   **What was changed**: Corrected `PPressureModel` from `none` to **`MuI`** and increased `relaxPa` from $5 \times 10^{-5}$ to **`0.001`** in [constant/granularRheologyProperties](file:///e:/DKS/bridge_sedfoam/constant/granularRheologyProperties).
-*   **Why**: When set to `none`, the solver lacked the necessary stress term to resist granular compaction near the maximum packing limit ($\alpha_{max} = 0.635$). Under shear stress, particles over-packed, causing division by zero/overflow. Activating the `MuI` model introduces the required normal repelling forces to stabilize the sediment skeleton.
+### 4.1 Granular Frictional Pressure Model & Viscosity Limiter
+*   **What was changed**: Corrected `PPressureModel` to **`MuI`** and set `relaxPa` to **`1e-4`** (granular pressure damping) in [constant/granularRheologyProperties](file:///e:/DKS/bridge_sedfoam/constant/granularRheologyProperties). Set `nuMax` to **`1e2`** (effective granular viscosity limiter) in [constant/transportProperties](file:///e:/DKS/bridge_sedfoam/constant/transportProperties).
+*   **Why**: When granular pressure is unrelaxed or viscosity is unlimited (`nuMax` defaults to 10), the Boyer et al. effective viscosity blows up asymptotically ($\mu_{eff} \propto (1 - \alpha/\alpha_{max})^{-2}$) near the maximum packing limit. This causes numerical stiffness and solver divergence. Limiting $\mu_{eff}$ via `nuMax = 1e2` and damping the pressure updates with `relaxPa = 1e-4` stabilized the shear stress calculation near the sediment-water interface.
 
-### 4.2 Particulate Exponent Calibration
-*   **What was changed**: Adjusted the exponent **`eta1` to `5`** and coefficient **`Fr` to `5e-2`** in [constant/ppProperties](file:///e:/DKS/bridge_sedfoam/constant/ppProperties).
-*   **Why**: The original exponent ($\eta_1 = 3$) generated too weak of a repelling force. As the volume fraction $\alpha_a$ neared $0.635$, the soft resistance curve allowed the boundary layer to overshoot the packing limit. Changing to $\eta_1 = 5$ forces the particulate pressure to grow asymptotically as a fifth-power of the distance to the packing limit, preventing overshoot.
+### 4.2 Decoupled Packing Limits
+*   **What was changed**: Decoupled the packing limit in the friction/viscosity rheology model (`alphaMaxG = 0.625`) from the contact pressure model (`alphaMax = 0.635` in `ppProperties`).
+*   **Why**: Having the exact same maximum limit in both models creates a mathematical singularity where the volume fraction $\alpha_a$ hits the packing limit asymptote in both models simultaneously. Decoupling them provides a physical safety margin, allowing the frictional rheology to restrict flow deformation before the contact pressure diverges.
 
-### 4.3 Forced Precise Convergence Limits
-*   **What was changed**: Set **`relTol 0;`** and kept **`tolerance 1e-12`** for the `alpha.a`, `alphaPlastic`, and `pa` solvers in [system/fvSolution](file:///e:/DKS/bridge_sedfoam/system/fvSolution).
-*   **Why**: The default relative tolerance (`relTol 0.01`) permitted the linear solver to terminate early when the residual dropped by two orders of magnitude, even if the absolute values were still large. Forcing `relTol 0` ensures the solver always iterates down to the absolute tolerance limit ($10^{-12}$), eliminating wiggles at the water-bed interface.
+### 4.3 Boundary Condition Corrections for Phase Fractions & Pressure
+*   **What was changed**: Changed the inlet boundary condition for `alpha.a` and `alpha.b` from `codedFixedValue` to **`zeroGradient`** in [0_org/alpha.a](file:///e:/DKS/bridge_sedfoam/0_org/alpha.a) and [0_org/alpha.b](file:///e:/DKS/bridge_sedfoam/0_org/alpha.b). Changed `p_rbgh` at the `bottom` and `bridge` patches from `zeroGradient` to **`fixedFluxPressure`** in [0_org/p_rbgh](file:///e:/DKS/bridge_sedfoam/0_org/p_rbgh).
+*   **Why**: The coded inlet was forcing a fixed concentration of $0.60$ at the inlet face every timestep, continuously pushing new particles into the domain and overloading the packing model at the upstream boundary. Zero gradient allows the bed to settle naturally based on the `setFields` initialization. Additionally, using `zeroGradient` for pressure on solid walls causes hydrostatic pressure decoupling in buoyant solvers; `fixedFluxPressure` ensures correct pressure-velocity coupling.
 
-### 4.4 Multi-Corrector & Temporal Control
-*   **What was changed**: Raised the number of PIMPLE pressure-velocity loops **`nCorrectors` to `3`** in [system/fvSolution](file:///e:/DKS/bridge_sedfoam/system/fvSolution), and configured `adjustTimeStep true` with a restricted `maxAlphaCo 0.3` in [system/controlDict](file:///e:/DKS/bridge_sedfoam/system/controlDict).
-*   **Why**: The extra loop gives the solver sufficient correctors to resolve the strong coupling between fluid momentum and granular stresses at the erodible bed boundary. Limiting the phase Courant number to 0.3 dynamically restricts `deltaT` during rapid bed deformation.
+### 4.4 Discretization Scheme Stabilization
+*   **What was changed**: Replaced the unbounded `Gauss linear` scheme for the Reynolds stress divergence terms `div(phiRa,Ua)` and `div(phiRb,Ub)` with **`Gauss linearUpwind grad(U.a)`** and **`grad(U.b)`** in [system/fvSchemes](file:///e:/DKS/bridge_sedfoam/system/fvSchemes).
+*   **Why**: The unbounded linear scheme caused high-speed velocity oscillations and unphysical jet shear under the sharp edge of the contraction deck, driving local divergence. The bounded `linearUpwind` scheme preserves second-order accuracy while ensuring numerical stability.
+
+### 4.5 Multi-Corrector, Under-Relaxation, & Temporal Control
+*   **What was changed**: Added a `relaxationFactors` block in [system/fvSolution](file:///e:/DKS/bridge_sedfoam/system/fvSolution) (`p_rbgh` = 0.3, `U.a` = 0.5, `U.b` = 0.7, `alpha.a` = 0.5, `pa` = 0.3), set PIMPLE outer iterations to **`nOuterCorrectors 2`**, non-orthogonal correctors to **`nNonOrthogonalCorrectors 1`**, and configured `deltaT 1e-5` (startup) with `maxCo 0.3` in [system/controlDict](file:///e:/DKS/bridge_sedfoam/system/controlDict).
+*   **Why**: Outer iterations and under-relaxation are necessary to damp field changes when solver coupling is strong. The conservative startup timestep allows the initialized sediment bed to adjust to the shear flow without producing numerical shockwaves, while `maxCo 0.3` allows the timestep to safely recover and accelerate once stability is achieved.
 
 ---
 
