@@ -22,28 +22,10 @@ boundaryField
 {
     inlet
     {
-        type            codedFixedValue;
-        value           uniform 1.0;
-        name            inletProfileAlphab;
-        code
-        #{
-            const fvPatch& boundaryPatch = patch();
-            const vectorField& Cf = boundaryPatch.Cf();
-            scalarField& field = *this;
-
-            forAll(Cf, faceI)
-            {
-                scalar y = Cf[faceI].y();
-                if (y <= 0.0)
-                {
-                    field[faceI] = 0.40;
-                }
-                else
-                {
-                    field[faceI] = 1.0;
-                }
-            }
-        #};
+        // zeroGradient: alpha.b=0.40 in bed set by setFields at t=0.
+        // codedFixedValue was continuously re-injecting alpha.b=0.40
+        // at inlet, fighting the solver and causing alpha.a+alpha.b != 1.
+        type            zeroGradient;
     }
     outlet
     {

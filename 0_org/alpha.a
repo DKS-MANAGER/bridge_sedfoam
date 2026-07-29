@@ -22,28 +22,10 @@ boundaryField
 {
     inlet
     {
-        type            codedFixedValue;
-        value           uniform 0;
-        name            inletProfileAlpha;
-        code
-        #{
-            const fvPatch& boundaryPatch = patch();
-            const vectorField& Cf = boundaryPatch.Cf();
-            scalarField& field = *this;
-
-            forAll(Cf, faceI)
-            {
-                scalar y = Cf[faceI].y();
-                if (y <= 0.0)
-                {
-                    field[faceI] = 0.60;
-                }
-                else
-                {
-                    field[faceI] = 0.0;
-                }
-            }
-        #};
+        // zeroGradient: packed bed (alpha=0.60) is set by setFields at t=0.
+        // Do NOT re-inject fixed alpha at inlet — this was causing a packing
+        // singularity at the inlet face driving alpha.a -> alphaMax each step.
+        type            zeroGradient;
     }
     outlet
     {

@@ -34,8 +34,8 @@ solvers
     p_rbghFinal
     {
         $p_rbgh;
-        tolerance       1e-5;
-        relTol          0.01;
+        tolerance       1e-6;
+        relTol          0;
     }
 
     "(k.b|epsilon.b|omega.b)"
@@ -105,12 +105,28 @@ solvers
 
 PIMPLE
 {
-    nNonOrthogonalCorrectors 0;
+    nOuterCorrectors    2;       // 2 outer PIMPLE iterations for stability
+    nNonOrthogonalCorrectors 1; // mesh is orthogonal but 1 adds robustness
     nCorrectors         3;
     nAlphaCorr      1;
-    correctAlpha    yes;
-//    pRefCell        0;
-//    pRefValue       0;
+    correctAlpha    no;
+}
+
+relaxationFactors
+{
+    fields
+    {
+        p_rbgh              0.3;   // aggressive pressure damping
+    }
+    equations
+    {
+        "U.a"               0.5;   // sediment velocity
+        "U.b"               0.7;   // fluid velocity
+        "alpha.a"           0.5;   // phase fraction
+        "pa"                0.3;   // granular pressure - strong damping
+        "k.b"               0.5;
+        "omega.b"           0.5;
+    }
 }
 
 

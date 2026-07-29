@@ -31,7 +31,10 @@ boundaryField
     }
     bottom
     {
-        type            zeroGradient;
+        // fixedFluxPressure: correct BC for solid walls in buoyant solvers.
+        // zeroGradient causes hydrostatic pressure decoupling near bed.
+        type            fixedFluxPressure;
+        value           uniform 0;
     }
     top
     {
@@ -39,7 +42,8 @@ boundaryField
     }
     bridge
     {
-        type            zeroGradient;
+        type            fixedFluxPressure;
+        value           uniform 0;
     }
     frontAndBack
     {

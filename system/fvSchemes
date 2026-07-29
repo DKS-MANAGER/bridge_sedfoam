@@ -36,12 +36,10 @@ divSchemes
 // UEqn
 //    div(phia,Ua)    Gauss linearUpwind grad(Ua);
 //    div(phib,Ub)    Gauss linearUpwind grad(Ub);
-    div(phi.a,U.a)    Gauss upwind phi;
-    div(phi.b,U.b)    Gauss upwind phi;
-    div(phiRa,Ua)   Gauss linear;
-    div(phiRb,Ub)   Gauss linear;
-//    div(phiRa,Ua)   Gauss upwind phi;
-//    div(phiRb,Ub)   Gauss upwind phi;
+    div(phi.a,U.a)    Gauss upwind;
+    div(phi.b,U.b)    Gauss upwind;
+    div(phiRa,Ua)   Gauss linearUpwind grad(U.a); // bounded for high-shear under contraction
+    div(phiRb,Ub)   Gauss linearUpwind grad(U.b); // bounded for high-shear under contraction
     div(Rca)        Gauss linear;
     div(Rcb)        Gauss linear;
 // pEqn
