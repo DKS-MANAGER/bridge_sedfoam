@@ -16,6 +16,11 @@ The original experimental work analyzed pressure-flow hydrodynamics under a vert
 
 In this repository, the setup is converted into a **mobile sediment bed** to simulate morphological scour. We employ the Eulerian-Eulerian two-phase flow solver `sedFoam_rbgh` coupled with the Boyer et al. $\mu(I)$ granular rheology model to resolve granular shear deformation, dilatancy, and erosion under the bridge contraction ceiling.
 
+### 1.1 2D Contraction Scour Domain Schematic
+Below is the technical schematic of the simulation domain, axis alignment, and flow parameters:
+
+![2D Flume Simulation Schematic](bridge_scour_geometry.png)
+
 ---
 
 ## 2. Hydraulic & Physical Parameters
