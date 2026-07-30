@@ -120,5 +120,22 @@ PIMPLE
     correctAlpha    yes;         // enabled to stabilize concentration coupling at higher timesteps
 }
 
+relaxationFactors
+{
+    fields
+    {
+        p_rbgh              0.3;   // aggressive pressure damping
+    }
+    equations
+    {
+        "U.a"               0.5;   // sediment velocity - damped for stability
+        "U.b"               0.7;   // fluid velocity
+        "alpha.a"           0.5;   // phase fraction - damped to prevent overpacking
+        "pa"                0.3;   // granular pressure - damped to prevent pressure spikes
+        "k.b"               0.7;
+        "omega.b"           0.7;
+    }
+}
+
 
 // ************************************************************************* //
