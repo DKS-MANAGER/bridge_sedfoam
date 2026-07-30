@@ -15,18 +15,18 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-numberOfSubdomains 12;
+numberOfSubdomains 8;
 
 method          scotch;
 
 scotchCoeffs
 {
-    processorWeights (1 1 1 1 1 1 1 1 1 1 1 1);
+    processorWeights (1 1 1 1 1 1 1 1);
 }
 
 hierarchicalCoeffs
 {
-    n               (6 2 1);  // 6 streamwise slices in X, 2 vertical layers in Y
+    n               (4 2 1);  // 4 slices in X, 2 vertical layers in Y
     delta           0.001;
     order           xyz;
 }

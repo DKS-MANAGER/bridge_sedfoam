@@ -25,7 +25,7 @@ ln -s Cz 0/ccz 2>/dev/null || true
 echo "Decomposing case..."
 decomposePar > log.decomposePar 2>&1
 
-echo "Running sedFoam_rbgh on 12 processors..."
-mpirun --oversubscribe -np 12 sedFoam_rbgh -parallel > log.sedFoam_rbgh 2>&1 &
+echo "Running sedFoam_rbgh on 8 processors..."
+mpirun --oversubscribe -np 8 sedFoam_rbgh -parallel > log.sedFoam_rbgh 2>&1 &
 
 echo "Simulation launched in background."
