@@ -120,10 +120,10 @@ relaxationFactors
     }
     equations
     {
-        "U.a"               0.5;   // sediment velocity
+        "U.a"               0.3;   // sediment velocity - damped for stability
         "U.b"               0.7;   // fluid velocity
-        "alpha.a"           0.5;   // phase fraction
-        "pa"                0.3;   // granular pressure - strong damping
+        "alpha.a"           0.3;   // phase fraction - damped to prevent overpacking
+        "pa"                0.1;   // granular pressure - strongly damped to prevent pressure spikes
         "k.b"               0.5;
         "omega.b"           0.5;
     }

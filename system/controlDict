@@ -31,9 +31,9 @@ writeControl    adjustableRunTime;
 
 writeInterval   1;
 
-purgeWrite      0;
+purgeWrite      10;
 
-writeFormat     binary;
+writeFormat     ascii;
 
 writePrecision  6;
 
@@ -47,10 +47,10 @@ runTimeModifiable on;
 
 adjustTimeStep  true;
 
-maxCo           0.3;    // Fluid Courant limit - raised from 0.1 to allow recovery
+maxCo           0.3;    // Fluid Courant limit - restored for ultra-fine mesh stability
 
-maxAlphaCo      0.3;    // Phase fraction Courant limit
+maxAlphaCo      0.3;    // Phase fraction Courant limit - restored for stability
 
-maxDeltaT       2e-4;
+maxDeltaT       2e-4;   // Restored ceiling to 0.2ms to match sub-millimeter mesh spacing
 
 // ************************************************************************* //
