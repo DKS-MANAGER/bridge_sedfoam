@@ -47,10 +47,10 @@ runTimeModifiable on;
 
 adjustTimeStep  true;
 
-maxCo           0.9;    // Aggressive limit for sedFoam_rbgh (ref: sedExnerFoam uses 2.0)
+maxCo           0.5;    // Optimal sweet spot for sedFoam_rbgh with packingLimiter
 
-maxAlphaCo      0.9;    // Aggressive phase Courant limit
+maxAlphaCo      0.5;    // Optimal sweet spot for phase Courant
 
-maxDeltaT       2e-3;   // 2ms ceiling - 10x faster than conservative 2e-4
+maxDeltaT       5e-4;   // 0.5ms - best stable throughput for this mesh
 
 // ************************************************************************* //
