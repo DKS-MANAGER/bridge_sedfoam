@@ -47,10 +47,10 @@ runTimeModifiable on;
 
 adjustTimeStep  true;
 
-maxCo           0.5;    // Optimal sweet spot for sedFoam_rbgh with packingLimiter
+maxCo           1.2;    // Fluid Courant limit - matched to 3DScour case
 
-maxAlphaCo      0.5;    // Optimal sweet spot for phase Courant
+maxAlphaCo      1.0;    // Phase fraction Courant limit - matched to 3DScour case
 
-maxDeltaT       5e-4;   // 0.5ms - best stable throughput for this mesh
+maxDeltaT       5e-2;   // 50ms ceiling - matched to 3DScour case
 
 // ************************************************************************* //
