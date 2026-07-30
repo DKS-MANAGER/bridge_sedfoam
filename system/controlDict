@@ -47,10 +47,10 @@ runTimeModifiable on;
 
 adjustTimeStep  true;
 
-maxCo           0.3;    // Fluid Courant limit - restored for ultra-fine mesh stability
+maxCo           0.4;    // Fluid Courant limit - safe with packingLimiter active
 
-maxAlphaCo      0.3;    // Phase fraction Courant limit - restored for stability
+maxAlphaCo      0.4;    // Phase fraction Courant limit - safe with packingLimiter active
 
-maxDeltaT       2e-4;   // Restored ceiling to 0.2ms to match sub-millimeter mesh spacing
+maxDeltaT       5e-4;   // Raised to 0.5ms - packingLimiter prevents packing singularity
 
 // ************************************************************************* //
