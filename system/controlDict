@@ -47,10 +47,10 @@ runTimeModifiable on;
 
 adjustTimeStep  true;
 
-maxCo           0.4;    // Fluid Courant limit - safe with packingLimiter active
+maxCo           0.9;    // Aggressive limit for sedFoam_rbgh (ref: sedExnerFoam uses 2.0)
 
-maxAlphaCo      0.4;    // Phase fraction Courant limit - safe with packingLimiter active
+maxAlphaCo      0.9;    // Aggressive phase Courant limit
 
-maxDeltaT       5e-4;   // Raised to 0.5ms - packingLimiter prevents packing singularity
+maxDeltaT       2e-3;   // 2ms ceiling - 10x faster than conservative 2e-4
 
 // ************************************************************************* //
