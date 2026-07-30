@@ -86,7 +86,7 @@ bridge_sedfoam/
 │   ├── fvSchemes               # Discretization schemes (implicit time, bounded upwind)
 │   ├── fvSolution              # Linear solvers, tolerances, and PIMPLE correctors
 │   ├── controlDict             # Sim execution limits, write time step, adjustTimeStep
-│   └── decomposeParDict        # Domain decomposition parameters (scotch, 8 processors)
+│   └── decomposeParDict        # Domain decomposition parameters (scotch, 12 processors)
 ├── Allclean                    # Bash utility to reset and clean case directories
 ├── Allrun                      # Bash utility to mesh, initialize, and launch the run
 ├── bridge_scour_geometry.png   # Side-view schematic of contraction domain
@@ -170,11 +170,11 @@ ln -s Cx 0/ccx 2>/dev/null || true
 ln -s Cy 0/ccy 2>/dev/null || true
 ln -s Cz 0/ccz 2>/dev/null || true
 
-# 6. Decompose domain into 8 subdomains for parallel execution
+# 6. Decompose domain into 12 subdomains for parallel execution
 decomposePar > log.decomposePar 2>&1
 
 # 7. Run the parallel solver (change -np to match your processor cores)
-mpirun -np 8 sedFoam_rbgh -parallel > log.sedFoam_rbgh 2>&1 &
+mpirun -np 12 sedFoam_rbgh -parallel > log.sedFoam_rbgh 2>&1 &
 ```
 
 ### 6.3 Directory Cleanup
