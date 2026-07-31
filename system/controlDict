@@ -23,7 +23,7 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         60;
+endTime         120;
 
 deltaT          1e-5;   // very conservative startup - allows bed to settle before shockwaves
 
