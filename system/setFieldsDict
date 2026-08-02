@@ -30,7 +30,7 @@ regions
     // Sediment bed region: y from -0.10 m to 0.0 m
     boxToCell
     {
-        box (0.0 -0.10 -0.01) (8.0 0.0 0.01);
+        box (0.0 -0.10 -0.01) (3.5 0.0 0.01);
         fieldValues
         (
             volScalarFieldValue alpha.a 0.60
