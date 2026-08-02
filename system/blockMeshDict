@@ -19,63 +19,74 @@ scale 1;
 vertices
 (
     // Front plane (z = -0.005 m)
-    (0.0  -0.10 -0.005)   // 0: bottom bed upstream
-    (1.0  -0.10 -0.005)   // 1: bottom bed contraction inlet
-    (1.15 -0.10 -0.005)   // 2: bottom bed contraction outlet
-    (8.0  -0.10 -0.005)   // 3: bottom bed downstream
+    (0.0  -0.10 -0.005)   // 0: bottom bed inlet
+    (1.0  -0.10 -0.005)   // 1: bottom bed bridge inlet
+    (1.15 -0.10 -0.005)   // 2: bottom bed bridge exit
+    (3.0  -0.10 -0.005)   // 3: bottom bed scour zone end
+    (3.5  -0.10 -0.005)   // 4: bottom bed outlet
     
-    (0.0   0.0  -0.005)   // 4: interface upstream
-    (1.0   0.0  -0.005)   // 5: interface contraction inlet
-    (1.15  0.0  -0.005)   // 6: interface contraction outlet
-    (8.0   0.0  -0.005)   // 7: interface downstream
+    (0.0   0.0  -0.005)   // 5: interface inlet
+    (1.0   0.0  -0.005)   // 6: interface bridge inlet
+    (1.15  0.0  -0.005)   // 7: interface bridge exit
+    (3.0   0.0  -0.005)   // 8: interface scour zone end
+    (3.5   0.0  -0.005)   // 9: interface outlet
     
-    (0.0   0.075 -0.005)  // 8: soffit level upstream
-    (1.0   0.075 -0.005)  // 9: soffit level contraction inlet
-    (1.15  0.075 -0.005)  // 10: soffit level contraction outlet
-    (8.0   0.075 -0.005)  // 11: soffit level downstream
+    (0.0   0.075 -0.005)  // 10: soffit level inlet
+    (1.0   0.075 -0.005)  // 11: soffit level bridge inlet
+    (1.15  0.075 -0.005)  // 12: soffit level bridge exit
+    (3.0   0.075 -0.005)  // 13: soffit level scour zone end
+    (3.5   0.075 -0.005)  // 14: soffit level outlet
     
-    (0.0   0.10  -0.005)  // 12: top upstream
-    (1.0   0.10  -0.005)  // 13: top contraction inlet outer
-    (1.15  0.10  -0.005)  // 14: top contraction outlet outer
-    (8.0   0.10  -0.005)  // 15: top downstream
+    (0.0   0.10  -0.005)  // 15: top inlet
+    (1.0   0.10  -0.005)  // 16: top bridge inlet
+    (1.15  0.10  -0.005)  // 17: top bridge exit
+    (3.0   0.10  -0.005)  // 18: top scour zone end
+    (3.5   0.10  -0.005)  // 19: top outlet
 
-    // Back plane (z = 0.005 m)
-    (0.0  -0.10  0.005)   // 16: bottom bed upstream
-    (1.0  -0.10  0.005)   // 17: bottom bed contraction inlet
-    (1.15 -0.10  0.005)   // 18: bottom bed contraction outlet
-    (8.0  -0.10  0.005)   // 19: bottom bed downstream
+    // Back plane (z = +0.005 m)
+    (0.0  -0.10  0.005)   // 20: bottom bed inlet
+    (1.0  -0.10  0.005)   // 21: bottom bed bridge inlet
+    (1.15 -0.10  0.005)   // 22: bottom bed bridge exit
+    (3.0  -0.10  0.005)   // 23: bottom bed scour zone end
+    (3.5  -0.10  0.005)   // 24: bottom bed outlet
     
-    (0.0   0.0   0.005)   // 20: interface upstream
-    (1.0   0.0   0.005)   // 21: interface contraction inlet
-    (1.15  0.0   0.005)   // 22: interface contraction outlet
-    (8.0   0.0   0.005)   // 23: interface downstream
+    (0.0   0.0   0.005)   // 25: interface inlet
+    (1.0   0.0   0.005)   // 26: interface bridge inlet
+    (1.15  0.0   0.005)   // 27: interface bridge exit
+    (3.0   0.0   0.005)   // 28: interface scour zone end
+    (3.5   0.0   0.005)   // 29: interface outlet
     
-    (0.0   0.075  0.005)  // 24: soffit level upstream
-    (1.0   0.075  0.005)  // 25: soffit level contraction inlet
-    (1.15  0.075  0.005)  // 26: soffit level contraction outlet
-    (8.0   0.075  0.005)  // 27: soffit level downstream
+    (0.0   0.075  0.005)  // 30: soffit level inlet
+    (1.0   0.075  0.005)  // 31: soffit level bridge inlet
+    (1.15  0.075  0.005)  // 32: soffit level bridge exit
+    (3.0   0.075  0.005)  // 33: soffit level scour zone end
+    (3.5   0.075  0.005)  // 34: soffit level outlet
     
-    (0.0   0.10   0.005)  // 28: top upstream
-    (1.0   0.10   0.005)  // 29: top contraction inlet outer
-    (1.15  0.10   0.005)  // 30: top contraction outlet outer
-    (8.0   0.10   0.005)  // 31: top downstream
+    (0.0   0.10   0.005)  // 35: top inlet
+    (1.0   0.10   0.005)  // 36: top bridge inlet
+    (1.15  0.10   0.005)  // 37: top bridge exit
+    (3.0   0.10   0.005)  // 38: top scour zone end
+    (3.5   0.10   0.005)  // 39: top outlet
 );
 
 blocks
 (
-    // Bottom Layer: Sediment Bed (y: -0.10 to 0.0 m)
-    hex (0 1 5 4 16 17 21 20) (120 50 1) simpleGrading (1 0.2 1)
-    hex (1 2 6 5 17 18 22 21) (45  50 1) simpleGrading (1 0.2 1)
-    hex (2 3 7 6 18 19 23 22) (500 50 1) simpleGrading (4.0 0.2 1)
+    // Bottom Layer: Sediment Bed (y: -0.10 to 0.0 m, 80 cells in Y)
+    hex (0 1 6 5 20 21 26 25)     (150 80 1)  simpleGrading (0.5 0.18 1)
+    hex (1 2 7 6 21 22 27 26)     (80  80 1)  simpleGrading (1.0 0.18 1)
+    hex (2 3 8 7 22 23 28 27)     (580 80 1)  simpleGrading (2.67 0.18 1)
+    hex (3 4 9 8 23 24 29 28)     (80  80 1)  simpleGrading (1.5 0.18 1)
 
-    // Middle Layer: Lower Fluid/Water (y: 0.0 to 0.075 m)
-    hex (4 5 9 8 20 21 25 24) (120 55 1) simpleGrading (1 5.0 1)
-    hex (5 6 10 9 21 22 26 25) (45  55 1) simpleGrading (1 5.0 1)
-    hex (6 7 11 10 22 23 27 26) (500 55 1) simpleGrading (4.0 5.0 1)
+    // Middle Layer: Lower Fluid/Water (y: 0.0 to 0.075 m, 85 cells in Y)
+    hex (5 6 11 10 25 26 31 30)   (150 85 1)  simpleGrading (0.5 5.8 1)
+    hex (6 7 12 11 26 27 32 31)   (80  85 1)  simpleGrading (1.0 5.8 1)
+    hex (7 8 13 12 27 28 33 32)   (580 85 1)  simpleGrading (2.67 5.8 1)
+    hex (8 9 14 13 28 29 34 33)   (80  85 1)  simpleGrading (1.5 5.8 1)
 
-    // Top Layer: Upper Fluid/Water (y: 0.075 to 0.10 m)
-    hex (8 9 13 12 24 25 29 28) (120 15 1) simpleGrading (1 2.0 1)
-    hex (10 11 15 14 26 27 31 30) (500 15 1) simpleGrading (4.0 2.0 1)
+    // Top Layer: Upper Fluid/Water (y: 0.075 to 0.10 m, 20 cells in Y, excluding bridge block)
+    hex (10 11 16 15 30 31 36 35) (150 20 1)  simpleGrading (0.5 2.0 1)
+    hex (12 13 18 17 32 33 38 37) (580 20 1)  simpleGrading (2.67 2.0 1)
+    hex (13 14 19 18 33 34 39 38) (80  20 1)  simpleGrading (1.5 2.0 1)
 );
 
 edges
@@ -89,9 +100,9 @@ boundary
         type patch;
         faces
         (
-            (0 4 20 16)   // sediment bed inlet
-            (4 8 24 20)   // lower fluid inlet
-            (8 12 28 24)  // upper fluid inlet
+            (0 5 25 20)    // sediment bed inlet
+            (5 10 30 25)   // lower fluid inlet
+            (10 15 35 30)  // upper fluid inlet
         );
     }
     outlet
@@ -99,9 +110,9 @@ boundary
         type patch;
         faces
         (
-            (3 19 23 7)   // sediment bed outlet
-            (7 11 27 23)  // lower fluid outlet
-            (11 15 31 27) // upper fluid outlet
+            (4 24 29 9)    // sediment bed outlet
+            (9 29 34 14)   // lower fluid outlet
+            (14 34 39 19)  // upper fluid outlet
         );
     }
     bottom
@@ -109,9 +120,10 @@ boundary
         type wall;
         faces
         (
-            (0 16 17 1)
-            (1 17 18 2)
-            (2 18 19 3)
+            (0 20 21 1)
+            (1 21 22 2)
+            (2 22 23 3)
+            (3 23 24 4)
         );
     }
     top
@@ -119,8 +131,9 @@ boundary
         type patch;
         faces
         (
-            (12 13 29 28)
-            (14 15 31 30)
+            (15 16 36 35)
+            (17 18 38 37)
+            (18 19 39 38)
         );
     }
     bridge
@@ -128,9 +141,9 @@ boundary
         type wall;
         faces
         (
-            (9 13 29 25)   // bridge vertical entry step (x = 1.0 m)
-            (9 10 26 25)   // bridge soffit ceiling (y = 0.075 m)
-            (10 14 30 26)  // bridge vertical exit step (x = 1.15 m)
+            (11 16 36 31)  // bridge vertical entry step (x = 1.0 m)
+            (11 12 32 31)  // bridge soffit ceiling (y = 0.075 m)
+            (12 17 37 32)  // bridge vertical exit step (x = 1.15 m)
         );
     }
     frontAndBack
@@ -139,23 +152,34 @@ boundary
         faces
         (
             // Front plane faces (z = -0.005 m, normal in -z direction)
-            (0 4 5 1)
-            (1 5 6 2)
-            (2 6 7 3)
-            (4 8 9 5)
-            (5 9 10 6)
-            (6 10 11 7)
-            (8 12 13 9)
-            (10 14 15 11)
+            (0 5 6 1)
+            (1 6 7 2)
+            (2 7 8 3)
+            (3 8 9 4)
+            
+            (5 10 11 6)
+            (6 11 12 7)
+            (7 12 13 8)
+            (8 13 14 9)
+            
+            (10 15 16 11)
+            (12 17 18 13)
+            (13 18 19 14)
+            
             // Back plane faces (z = 0.005 m, normal in +z direction)
-            (16 17 21 20)
-            (17 18 22 21)
-            (18 19 23 22)
-            (20 21 25 24)
-            (21 22 26 25)
-            (22 23 27 26)
-            (24 25 29 28)
-            (26 27 31 30)
+            (20 21 26 25)
+            (21 22 27 26)
+            (22 23 28 27)
+            (23 24 29 28)
+            
+            (25 26 31 30)
+            (26 27 32 31)
+            (27 28 33 32)
+            (28 29 34 33)
+            
+            (30 31 36 35)
+            (32 37 38 33)
+            (33 38 39 34)
         );
     }
 );
