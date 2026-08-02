@@ -12,7 +12,7 @@ This numerical model adapts the experimental hydraulic flume configurations desc
 > *ASCE Journal of Hydraulic Engineering (Volume 152, Issue 3, January 2026)*  
 > DOI: [10.1061/JHEND8.HYENG-14490](https://doi.org/10.1061/JHEND8.HYENG-14490)
 
-The original experimental work analyzed pressure-flow hydrodynamics under a vertical bridge contraction using a rigid bed with three roughness grades ($K_s = 0.33\text{ mm}$, $0.68\text{ mm}$, and $1.90\text{ mm}$). 
+The original experimental work analyzed pressure-flow hydrodynamics under a vertical bridge contraction using a rigid bed with three roughness grades ($K_s = 0.33\text{ mm}$, $0.68\text{ mm}$, and $1.90\text{ mm}$). In this mobile sediment bed implementation, the bed material has been updated to **Grade-III Ahmedabad sand ($d_{50} = 0.294\text{ mm}$)**.
 
 In this repository, the setup is converted into a **mobile sediment bed** to simulate morphological scour. We employ the Eulerian-Eulerian two-phase flow solver `sedFoam_rbgh` coupled with the Boyer et al. $\mu(I)$ granular rheology model to resolve granular shear deformation, dilatancy, and erosion under the bridge contraction ceiling.
 
@@ -43,7 +43,7 @@ The baseline flow, fluid, and sediment properties configured in the workspace ar
 | Fluid Phase Density (Water) | $\rho_f$ | $1000\text{ kg/m}^3$ | [transportProperties](file:///e:/DKS/bridge_sedfoam/constant/transportProperties#L28) |
 | Fluid Kinematic Viscosity | $\nu_f$ | $1.0 \times 10^{-6}\text{ m}^2/\text{s}$ | [transportProperties](file:///e:/DKS/bridge_sedfoam/constant/transportProperties#L29) |
 | Sediment Phase Density | $\rho_s$ | $2650\text{ kg/m}^3$ | [transportProperties](file:///e:/DKS/bridge_sedfoam/constant/transportProperties#L19) |
-| Median Grain Diameter | $d_{50}$ | $0.68\text{ mm}$ | [transportProperties](file:///e:/DKS/bridge_sedfoam/constant/transportProperties#L21) |
+| Median Grain Diameter | $d_{50}$ | $0.294\text{ mm}$ (Ahmedabad Sand) | [transportProperties](file:///e:/DKS/bridge_sedfoam/constant/transportProperties#L21) |
 | Frictional Friction Angle | $\phi$ | $22.02^\circ$ (mus = 0.4) | [granularRheologyProperties](file:///e:/DKS/bridge_sedfoam/constant/granularRheologyProperties#L26) |
 | Maximum Packing Limit | $\alpha_{s,\text{max}}$ | $0.635$ | [granularRheologyProperties](file:///e:/DKS/bridge_sedfoam/constant/granularRheologyProperties#L24) |
 | Frictional Pressure Exponent | $\eta_1$ | $5$ | [ppProperties](file:///e:/DKS/bridge_sedfoam/constant/ppProperties#L29) |
