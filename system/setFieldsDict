@@ -20,9 +20,9 @@ defaultFieldValues
     volScalarFieldValue alpha.b 1.0
     volScalarFieldValue Theta 1e-8
     volVectorFieldValue U.a (0 0 0)
-    volVectorFieldValue U.b (0.26 0 0)
-    volScalarFieldValue k.b 2.535e-4
-    volScalarFieldValue omega.b 4.153
+    volVectorFieldValue U.b (0.35 0 0)
+    volScalarFieldValue k.b 4.594e-4
+    volScalarFieldValue omega.b 5.590
 );
 
 regions

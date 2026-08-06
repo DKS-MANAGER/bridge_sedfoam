@@ -16,7 +16,7 @@ FoamFile
 
 dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform 2.535e-4;
+internalField   uniform 4.594e-4;
 
 boundaryField
 {
@@ -36,7 +36,7 @@ boundaryField
                 scalar y = Cf[faceI].y();
                 if (y > 0.0)
                 {
-                    field[faceI] = 2.535e-4;
+                    field[faceI] = 4.594e-4;
                 }
                 else
                 {
@@ -61,7 +61,7 @@ boundaryField
     bridge
     {
         type            kqRWallFunction;
-        value           uniform 2.535e-4;
+        value           uniform 4.594e-4;
     }
     frontAndBack
     {

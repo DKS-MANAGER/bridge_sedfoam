@@ -23,13 +23,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         120;
+endTime         400;
 
 deltaT          1e-5;   // very conservative startup - allows bed to settle before shockwaves
 
 writeControl    adjustableRunTime;
 
-writeInterval   1;
+writeInterval   5;      // Save every 5s instead of 1s to reduce disk space for 400s run
 
 purgeWrite      0;
 
@@ -47,10 +47,10 @@ runTimeModifiable on;
 
 adjustTimeStep  true;
 
-maxCo           0.4;    // Restored fluid Courant limit for startup stability
+maxCo           0.3;    // Ultra-stable fluid Courant limit
 
-maxAlphaCo      0.4;    // Restored phase Courant limit for startup stability
+maxAlphaCo      0.3;    // Ultra-stable phase Courant limit
 
-maxDeltaT       1e-3;   // Retain 1ms ceiling - will scale up once startup transient passes
+maxDeltaT       1e-3;   // Conservative 1.0 ms timestep ceiling for rock-solid stability
 
 // ************************************************************************* //

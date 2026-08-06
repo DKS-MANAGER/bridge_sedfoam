@@ -215,14 +215,8 @@ To track the erodible bed surface deformation over time:
 
 ## 8. Validation Comparison Graph
 
-To validate the morphodynamic scour development of the high-fidelity `sedFoam_rbgh` solver, we compare the simulated bed elevation profiles ($t = 20\text{ s}$, $40\text{ s}$, $77\text{ s}$, and $88\text{ s}$) against the classical experimental pressure-flow contraction scour equilibrium curve based on literature database configurations (HEC-18 / Umbrell et al., 1998):
-
-![Live-Bed Scour Validation Comparison Plot](livebed_scour_comparison.png)
-
-### Key Observations & Validation Analysis:
-*   **Contraction Entrance Dynamics**: The maximum scour depth occurs at the upstream contraction entrance ($x \approx 1.05\text{ m}$), where the vertical constriction forces fluid acceleration. This aligns with the physical mechanics of pressurized contraction flow.
-*   **Scour Progression**: The scour hole depth reaches $1.15\text{ cm}$ at $t = 88\text{ s}$ and is advancing stably.
-*   **Deposition Dune downstream**: Further downstream ($x \approx 1.70\text{ m}$), the scoured sediment deposits into a morphological dune as the flow exits the contracted deck and decelerates, mirroring experimental patterns.
+> [!NOTE]
+> A new simulation run is currently in progress for **Grade-III Ahmedabad sand ($d_{50} = 0.294\text{ mm}$)**. The validation comparison graph and corresponding scour profile datasets (formerly generated for the $0.68\text{ mm}$ sand case) have been removed to prevent data mixing and will be updated here once the simulation reaches key timesteps.
 
 ---
 
